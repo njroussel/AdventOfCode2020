@@ -26,7 +26,7 @@ pub fn parse() -> (u32, bool) {
     let harder: bool = arg_matches.is_present("harder");
 
     if day < 1 || day > 24 {
-        panic!("The calendar day should be between 1 and 24 (included)!")
+        panic!("The calendar day should be between 1 and 24 (included)!");
     }
 
     println!("The selected day is: {}", day);
@@ -36,5 +36,5 @@ pub fn parse() -> (u32, bool) {
         println!("Solving the normal puzzle for day: {}", day);
     }
 
-    return (day, harder);
+    (day, harder)
 }
