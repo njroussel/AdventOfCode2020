@@ -1,6 +1,6 @@
 use clap::{App, Arg};
 
-pub def parse()   {
+pub fn parse() -> (u32, bool) {
     let arg_matches = App::new("AdventOfCode2020")
         .version("1.0")
         .about("Solutions to AdventOfCode 2020")
@@ -17,7 +17,7 @@ pub def parse()   {
         )
         .get_matches();
 
-    let day: i32 = arg_matches
+    let day: u32 = arg_matches
         .value_of("day")
         .unwrap()
         .parse()
@@ -35,4 +35,6 @@ pub def parse()   {
     } else {
         println!("Solving the normal puzzle for day: {}", day);
     }
+
+    return (day, harder);
 }
