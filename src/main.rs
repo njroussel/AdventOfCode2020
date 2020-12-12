@@ -1,3 +1,6 @@
+mod argparser;
+
 fn main() {
-    println!("Hello, world!");
+    argparser::parse();
+    println!("HELLO");
 }
