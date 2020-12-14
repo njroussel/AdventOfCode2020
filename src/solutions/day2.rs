@@ -50,14 +50,14 @@ fn test_password(password: &Password) -> bool {
     true
 }
 
-struct Password {
-    password: String,
-    policy_char: char,
-    policy_min: i32,
-    policy_max: i32,
+pub struct Password {
+    pub password: String,
+    pub policy_char: char,
+    pub policy_min: i32,
+    pub policy_max: i32,
 }
 
-fn parse_input(filename: &str) -> io::Result<Vec<Password>> {
+pub fn parse_input(filename: &str) -> io::Result<Vec<Password>> {
     let path = Path::new(filename);
     let file = File::open(&path)?;
 
