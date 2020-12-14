@@ -1,7 +1,7 @@
 use crate::solutions::day3;
 
 pub fn run() {
-    println!("Day 1 solution.");
+    println!("Day 3 solution (harder).");
 
     println!("Parsing example input...");
     let input = day3::parse_input("./inputs/day3/example").unwrap();

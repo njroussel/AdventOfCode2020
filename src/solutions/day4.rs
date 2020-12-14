@@ -3,10 +3,10 @@ use std::io::{self, BufRead};
 use std::path::Path;
 
 pub fn run() {
-    println!("Day 3 solution.");
+    println!("Day 4 solution.");
 
     println!("Parsing example input...");
-    let input = parse_input("./inputs/day3/example").unwrap();
+    let input = parse_input("./inputs/day4/example").unwrap();
     println!("Parsed.");
 
     println!("Solving...");
@@ -14,7 +14,7 @@ pub fn run() {
     println!("Solution: {}", count);
 
     println!("Parsing input...");
-    let input = parse_input("./inputs/day3/input").unwrap();
+    let input = parse_input("./inputs/day4/input").unwrap();
     println!("Parsed.");
 
     println!("Solving...");
