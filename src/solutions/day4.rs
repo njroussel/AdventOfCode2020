@@ -22,83 +22,98 @@ pub fn run() {
     println!("Solution: {}", count);
 }
 
-fn solution(forest: &Forest) -> i32 {
-    tree_counter(forest, (3, 1))
-}
-
-pub fn tree_counter(forest: &Forest, traversal_strategy: (i32, i32)) -> i32 {
-    let (x_move, y_move) = traversal_strategy;
-    let mut current_position: (i32, i32) = (0, 0);
-    let mut reached_end = false;
+fn solution(passports: &Vec<Passport>) -> i32 {
     let mut counter: i32 = 0;
 
-    while !reached_end {
-        match forest.traverse(current_position, x_move, y_move) {
-            Err(_) => reached_end = true,
-            Ok(new_position) => {
-                current_position = new_position;
-                if forest.tree_at(current_position) {
-                    counter += 1;
-                }
-            }
+    for passport in passports {
+        let is_valid = passport.byr.is_some()
+            && passport.iyr.is_some()
+            && passport.eyr.is_some()
+            && passport.hgt.is_some()
+            && passport.hcl.is_some()
+            && passport.ecl.is_some()
+            && passport.pid.is_some();
+
+        if is_valid {
+            counter += 1;
         }
     }
 
     counter
 }
 
-pub struct Forest {
-    pub trees: Vec<Vec<bool>>,
-    pub width: usize,
-    pub height: usize,
+#[derive(Debug)]
+struct Passport {
+    byr: Option<i32>,
+    iyr: Option<i32>,
+    eyr: Option<i32>,
+    hgt: Option<String>,
+    hcl: Option<String>,
+    ecl: Option<String>,
+    pid: Option<String>,
+    cid: Option<i32>,
 }
 
-impl Forest {
-    pub fn from_file(filename: &str, tree_char: char) -> io::Result<Forest> {
-        let path = Path::new(filename);
-        let file = File::open(&path)?;
+impl Passport {
+    pub fn from_str(input_str: &String) -> io::Result<Passport> {
+        let mut out = Passport {
+            byr: None,
+            iyr: None,
+            eyr: None,
+            hgt: None,
+            hcl: None,
+            ecl: None,
+            pid: None,
+            cid: None,
+        };
+        let kv_pairs = input_str.trim().split(" ");
 
-        let mut forest: Vec<Vec<bool>> = Vec::new();
+        for kv_pair in kv_pairs {
+            let kv: Vec<&str> = kv_pair.split(":").collect();
+            let key = kv[0];
+            let value = kv[1];
 
-        for line in (io::BufReader::new(&file)).lines() {
-            if let Ok(value) = line {
-                let row: Vec<bool> = value.chars().map(|c| c == tree_char).collect();
-                forest.push(row)
+            match key {
+                "byr" => out.byr = Some(value.parse().unwrap()),
+                "iyr" => out.iyr = Some(value.parse().unwrap()),
+                "eyr" => out.eyr = Some(value.parse().unwrap()),
+                "hgt" => out.hgt = Some(value.parse().unwrap()),
+                "hcl" => out.hcl = Some(value.parse().unwrap()),
+                "ecl" => out.ecl = Some(value.parse().unwrap()),
+                "pid" => out.pid = Some(value.parse().unwrap()),
+                "cid" => out.cid = Some(value.parse().unwrap()),
+                _ => (),
             }
         }
 
-        let width = forest[0].len();
-        let height = forest.len();
-
-        Ok(Forest {
-            trees: forest,
-            width: width,
-            height: height,
-        })
-    }
-
-    pub fn tree_at(&self, position: (i32, i32)) -> bool {
-        let (width, height) = position;
-        self.trees[height as usize][width as usize]
-    }
-
-    pub fn traverse(
-        &self,
-        current_position: (i32, i32),
-        x_move: i32,
-        y_move: i32,
-    ) -> Result<(i32, i32), &str> {
-        let new_x = (current_position.0 + x_move) % (self.width as i32);
-        let new_y = current_position.1 + y_move;
-
-        if new_y >= (self.height as i32) {
-            return Err("Trying to exit the Y axis of the forest!");
-        }
-
-        Ok((new_x, new_y))
+        Ok(out)
     }
 }
 
-pub fn parse_input(filename: &str) -> io::Result<Forest> {
-    Forest::from_file(filename, '#')
+fn parse_input(filename: &str) -> io::Result<Vec<Passport>> {
+    let path = Path::new(filename);
+    let file = File::open(&path)?;
+
+    let mut passports: Vec<Passport> = Vec::new();
+    let mut lines: Vec<String> = Vec::new();
+
+    fn concat_lines(lines: &Vec<String>) -> String {
+        lines
+            .iter()
+            .fold("".to_string(), |acc, line| format!("{} {}", acc, line))
+    }
+
+    for line in (io::BufReader::new(&file)).lines() {
+        if let Ok(value) = line {
+            lines.push(value.trim().to_string());
+            if (&lines[lines.len() - 1]).eq("") {
+                passports.push(Passport::from_str(&concat_lines(&lines))?);
+                lines.clear();
+            }
+        }
+    }
+
+    passports.push(Passport::from_str(&concat_lines(&lines))?);
+
+    Ok(passports)
 }
