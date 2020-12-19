@@ -2,6 +2,7 @@ use std::cmp;
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
+
 pub fn run() {
     println!("Day 5 solution.");
 
@@ -22,23 +23,23 @@ pub fn run() {
     println!("Solution: {}", count);
 }
 
-fn solution(passports: &Vec<BoardingPass>, detail: bool) -> i32 {
+fn solution(boardingpasses: &Vec<BoardingPass>, detail: bool) -> i32 {
     if detail {
-        for passport in passports {
-            println!("{:?}", passport)
+        for boardingpass in boardingpasses {
+            println!("{:?}", boardingpass)
         }
     }
 
-    passports
+    boardingpasses
         .iter()
-        .fold(0, |max, passport| cmp::max(max, passport.seat_id))
+        .fold(0, |max, boardinpass| cmp::max(max, boardinpass.seat_id))
 }
 
 #[derive(Debug)]
-struct BoardingPass {
-    row: i32,
-    column: i32,
-    seat_id: i32,
+pub struct BoardingPass {
+    pub row: i32,
+    pub column: i32,
+    pub seat_id: i32,
 }
 
 impl BoardingPass {
@@ -97,17 +98,17 @@ fn bsp(partioning_idx: &Vec<bool>, partition_idx: usize, start_idx: i32, end_idx
     }
 }
 
-fn parse_input(filename: &str) -> io::Result<Vec<BoardingPass>> {
+pub fn parse_input(filename: &str) -> io::Result<Vec<BoardingPass>> {
     let path = Path::new(filename);
     let file = File::open(&path)?;
 
-    let mut passports: Vec<BoardingPass> = Vec::new();
+    let mut boardingpasses: Vec<BoardingPass> = Vec::new();
 
     for line in (io::BufReader::new(&file)).lines() {
         if let Ok(value) = line {
-            passports.push(BoardingPass::from_str(&value)?);
+            boardingpasses.push(BoardingPass::from_str(&value)?);
         }
     }
 
-    Ok(passports)
+    Ok(boardingpasses)
 }
