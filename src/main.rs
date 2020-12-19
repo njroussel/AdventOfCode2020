@@ -15,6 +15,7 @@ fn main() {
         (4, true) => solutions::day4harder::run(),
         (5, false) => solutions::day5::run(),
         (5, true) => solutions::day5harder::run(),
+        (6, false) => solutions::day6::run(),
         _ => println!("No implementation for this day yet!"),
     }
 }
